@@ -84,14 +84,35 @@ Open **http://localhost:5188**.
 
 ### Docker Compose
 
-GitHub Actions publishes the image to GHCR and keeps only the two latest image versions. Once the image is public, run this from the project root:
+The repository includes `docker-compose.yaml`. GitHub Actions builds `ghcr.io/org100/word-atlas:latest` and keeps only the two latest image versions. Pull the published image from the project root:
 
 ```bash
 docker compose pull
 docker compose up -d
 ```
 
-Open **http://localhost:5188**. Stop the service with `docker compose down`. To build from source locally, run `docker compose up -d --build`.
+Open **http://localhost:5188**. Stop the service with:
+
+```bash
+docker compose down
+```
+
+To build from source locally, run `docker compose up -d --build`.
+
+### Nginx Proxy Manager
+
+Start the Compose service first, then create a dedicated subdomain such as `words.example.com` in Nginx Proxy Manager (NPM). Under **Hosts → Proxy Hosts → Add Proxy Host**, use:
+
+| Field | Value |
+| :--- | :--- |
+| Domain Names | `words.example.com` |
+| Scheme | `http` |
+| Forward Hostname / IP | The Docker host IP reachable from NPM, for example `192.168.1.20` |
+| Forward Port | `5188` |
+| Websockets Support | Off |
+| Block Common Exploits | On |
+
+In the **SSL** tab, request a Let's Encrypt certificate and enable **Force SSL** and **HTTP/2 Support**. Point the domain's DNS A record to the server and forward public ports 80 and 443 to NPM. If NPM also runs in Docker, do not use `localhost` as the upstream host; use the Docker host IP. If NPM runs directly on the Docker host, `127.0.0.1:5188` is fine. Then open `https://words.example.com`.
 
 ```bash
 npm test             # Unit tests
