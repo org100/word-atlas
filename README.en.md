@@ -74,45 +74,41 @@ Listen to a sample: **abandon** — [UK](public/atlas/audio/uk/abandon.mp3) · [
 Requires **Node.js 20+** and npm. This repository includes the full image and audio collection, so the initial download can take time.
 
 ```bash
-git clone --depth 1 https://github.com/org100/word-atlas.git
+git clone --depth 1 https://github.com/designfuchen/word-atlas.git
 cd word-atlas
 npm ci
 npm run dev
 ```
 
-Open **http://localhost:5188**.
+Open `http://localhost:5188`.
 
 ### Docker Compose
 
-The repository includes `docker-compose.yaml`. GitHub Actions builds `ghcr.io/org100/word-atlas:latest` and keeps only the two latest image versions. Pull the published image from the project root:
+Download the compose file and start the container:
 
 ```bash
+curl -O https://raw.githubusercontent.com/org100/word-atlas/main/docker-compose.yaml
 docker compose pull
 docker compose up -d
 ```
 
-Open **http://localhost:5188**. Stop the service with:
+Open `http://localhost:5188`. To customize the port or base path, create a `.env` file in the same directory:
 
-```bash
-docker compose down
+```env
+ATLAS_PORT=5188
+ATLAS_BASE=/
 ```
-
-To build from source locally, run `docker compose up -d --build`.
 
 ### Nginx Proxy Manager
 
-Start the Compose service first, then create a dedicated subdomain such as `words.example.com` in Nginx Proxy Manager (NPM). Under **Hosts → Proxy Hosts → Add Proxy Host**, use:
+If NPM runs on the same Docker network (e.g., `npm_default`), forward traffic directly using the container name instead of an IP:
 
-| Field | Value |
-| :--- | :--- |
-| Domain Names | `words.example.com` |
-| Scheme | `http` |
-| Forward Hostname / IP | The Docker host IP reachable from NPM, for example `192.168.1.20` |
-| Forward Port | `5188` |
-| Websockets Support | Off |
-| Block Common Exploits | On |
-
-In the **SSL** tab, request a Let's Encrypt certificate and enable **Force SSL** and **HTTP/2 Support**. Point the domain's DNS A record to the server and forward public ports 80 and 443 to NPM. If NPM also runs in Docker, do not use `localhost` as the upstream host; use the Docker host IP. If NPM runs directly on the Docker host, `127.0.0.1:5188` is fine. Then open `https://words.example.com`.
+1. In NPM, add a new **Proxy Host**:
+   - **Domain Names**: Your domain (e.g., `words.example.com`)
+   - **Scheme**: `http`
+   - **Forward Hostname / IP**: `word-atlas` (container name)
+   - **Forward Port**: `80`
+2. In the **SSL** tab, request a Let's Encrypt certificate and enable **Force SSL**.
 
 ```bash
 npm test             # Unit tests
