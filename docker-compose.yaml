@@ -12,3 +12,9 @@ services:
     ports:
       - "${ATLAS_PORT:-5188}:80"
     restart: unless-stopped
+    networks:
+      - npm_default
+
+networks:
+  npm_default:
+    external: true
