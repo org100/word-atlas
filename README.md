@@ -70,8 +70,6 @@
 <details>
 <summary><b>听发音、例句与环境声样本</b></summary>
 
-
-
 拿 *abandon* 举例，点开就能听（在线播放）：
 
 | | |
@@ -94,7 +92,6 @@
 
 全部素材都在仓库里：插画在 `public/atlas/img/`，录音在 `public/atlas/audio/`，这两类按 CC BY 4.0 开放；界面声音和配乐在 `public/sfx/`，随应用一起提供。
 
-
 </details>
 
 ## 本地运行
@@ -112,41 +109,28 @@ npm run dev
 
 ### Docker Compose
 
-仓库根目录已包含 `docker-compose.yaml`。GitHub Actions 会构建并发布 `ghcr.io/org100/word-atlas:latest`，并在每次发布后清理旧镜像版本、只保留最近 2 个版本。首次运行从 GHCR 拉取镜像：
+可以直接从 Github 获取配置文件并启动：
 
 ```bash
+curl -O https://raw.githubusercontent.com/org100/word-atlas/main/docker-compose.yaml
 docker compose pull
 docker compose up -d
 ```
 
-打开 **http://localhost:5188**。停止服务：
-
-```bash
-docker compose down
-```
-
-要在本机从源码构建镜像（例如 GHCR 镜像尚未发布），运行：
-
-```bash
-docker compose up -d --build
+如需配置端口或部署路径，可创建 `.env` 文件写入环境变量：
+```env
+ATLAS_PORT=5188
+ATLAS_BASE=/
 ```
 
 ### Nginx Proxy Manager
 
-使用 Nginx Proxy Manager（NPM）绑定域名和配置 HTTPS 时，先按上面的步骤启动容器。推荐使用独立子域名，例如 `words.example.com`。在 NPM 的 **Hosts → Proxy Hosts → Add Proxy Host** 中填写：
+在同一个 Docker 网络下，NPM 可直接使用容器名进行反向代理：
 
-| 字段 | 配置 |
-| :--- | :--- |
-| Domain Names | `words.example.com`（替换成自己的域名） |
-| Scheme | `http` |
-| Forward Hostname / IP | Docker 主机在 NPM 所在网络中的 IP，例如 `192.168.1.20` |
-| Forward Port | `5188` |
-| Websockets Support | 关闭 |
-| Block Common Exploits | 开启 |
+- **Forward Hostname / IP**: `word-atlas`
+- **Forward Port**: `80`
 
-在 **SSL** 标签页申请 Let's Encrypt 证书，并开启 **Force SSL** 和 **HTTP/2 Support**。DNS 的 A 记录需指向服务器公网 IP，公网 80 和 443 端口需转发到 NPM。
-
-如果 NPM 自己也运行在 Docker 容器中，转发地址不要填 `localhost`，它会指向 NPM 容器自身；填写 Docker 主机 IP。若 NPM 直接运行在 Docker 主机上，转发地址可填 `127.0.0.1`。保存后通过 `https://words.example.com` 访问。完整说明见[部署文档](docs/deployment.md)。
+开启 SSL 后即可通过域名访问。完整说明见 [部署文档](docs/deployment.md)。
 
 ```bash
 npm test             # 单元测试
