@@ -74,7 +74,7 @@ Listen to a sample: **abandon** — [UK](public/atlas/audio/uk/abandon.mp3) · [
 Requires **Node.js 20+** and npm. This repository includes the full image and audio collection, so the initial download can take time.
 
 ```bash
-git clone --depth 1 https://github.com/designfuchen/word-atlas.git
+git clone --depth 1 https://github.com/org100/word-atlas.git
 cd word-atlas
 npm ci
 npm run dev
@@ -82,7 +82,16 @@ npm run dev
 
 Open **http://localhost:5188**.
 
-With Docker Compose, run `docker compose up -d` and open the same URL. Stop the container with `docker compose down`. GitHub Actions publishes the image to GHCR; Compose builds from the Dockerfile if the image is not available locally or in GHCR.
+### Docker Compose
+
+GitHub Actions publishes the image to GHCR. Once the image is public, run this from the project root:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+Open **http://localhost:5188**. Stop the service with `docker compose down`. To build from source locally, run `docker compose up -d --build`.
 
 ```bash
 npm test             # Unit tests

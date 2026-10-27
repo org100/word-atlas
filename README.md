@@ -102,7 +102,7 @@
 需要 **Node.js 20+** 和 npm。仓库含完整图片与录音，首次下载可能较久。
 
 ```bash
-git clone --depth 1 https://github.com/designfuchen/word-atlas.git
+git clone --depth 1 https://github.com/org100/word-atlas.git
 cd word-atlas
 npm ci
 npm run dev
@@ -110,7 +110,16 @@ npm run dev
 
 打开 **http://localhost:5188**。
 
-使用 Docker Compose：`docker compose up -d`，然后同样打开 **http://localhost:5188**。停止容器：`docker compose down`。镜像由 GitHub Actions 发布到 GHCR；本地没有可用镜像时 Compose 会从 Dockerfile 构建。
+### Docker Compose
+
+GitHub Actions 会把镜像发布到 GHCR。镜像公开后，在项目根目录运行：
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+打开 **http://localhost:5188**。停止服务：`docker compose down`。要在本地从源码构建镜像，运行 `docker compose up -d --build`。
 
 ```bash
 npm test             # 单元测试
