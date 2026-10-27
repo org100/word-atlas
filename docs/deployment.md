@@ -24,38 +24,48 @@ location ^~ /words/ {
 
 ## Docker Compose
 
-直接下载仓库的 `docker-compose.yaml` 文件：
+直接拉取配置文件并启动容器：
 
 ```bash
 curl -O https://raw.githubusercontent.com/org100/word-atlas/main/docker-compose.yaml
+docker compose pull
+docker compose up -d
 ```
 
-若需自定义端口或部署路径，可在同级目录下新建 `.env` 环境变量文件：
+打开 `http://localhost:5188`。停止服务运行 `docker compose down`。
+
+如需修改端口或配置子路径，可在同级目录新建 `.env` 文件：
 
 ```env
 ATLAS_PORT=5188
 ATLAS_BASE=/
 ```
 
-拉取镜像并启动容器：
-
-```bash
-docker compose pull
-docker compose up -d
-```
-
-启动后访问 `http://<服务器IP>:5188`。停止服务：`docker compose down`。
-
 ## Nginx Proxy Manager
 
-如果 NPM 与本项目运行在同一个 Docker 网络（例如 `npm_default`），NPM 中无需使用 IP，直接通过容器名转发：
+如果 NPM 与本项目运行在同一个 Docker 网络（例如 `npm_default`），确保 `docker-compose.yaml` 中已加入该网络：
 
-1. 在 NPM 中新增 **Proxy Host**：
+```yaml
+services:
+  word-atlas:
+    # ... 保持原有配置 ...
+    networks:
+      - npm_default
+
+networks:
+  npm_default:
+    external: true
+```
+
+在 NPM 中无需填写 IP，直接通过容器名转发：
+
+1. 在 NPM 的 **Hosts → Proxy Hosts → Add Proxy Host** 中填写：
    - **Domain Names**: 你的域名（如 `words.example.com`）
    - **Scheme**: `http`
    - **Forward Hostname / IP**: `word-atlas`（直接填写容器名）
    - **Forward Port**: `80`
-2. 在 **SSL** 标签页申请 Let's Encrypt 证书并勾选 **Force SSL**。
+   - **Block Common Exploits**: 开启
+2. 在 **SSL** 标签页申请 Let's Encrypt 证书，勾选 **Force SSL** 和 **HTTP/2 Support**。
 
 ## 体积
 
