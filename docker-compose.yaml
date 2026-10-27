@@ -1,0 +1,14 @@
+services:
+  word-atlas:
+    image: ghcr.io/org100/word-atlas:latest
+    build:
+      context: .
+      args:
+        ATLAS_BASE: ${ATLAS_BASE:-/}
+    pull_policy: missing
+    container_name: word-atlas
+    environment:
+      ATLAS_BASE: ${ATLAS_BASE:-/}
+    ports:
+      - "${ATLAS_PORT:-5188}:80"
+    restart: unless-stopped

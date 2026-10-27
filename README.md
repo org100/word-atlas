@@ -110,6 +110,8 @@ npm run dev
 
 打开 **http://localhost:5188**。
 
+使用 Docker Compose：`docker compose up -d`，然后同样打开 **http://localhost:5188**。停止容器：`docker compose down`。镜像由 GitHub Actions 发布到 GHCR；本地没有可用镜像时 Compose 会从 Dockerfile 构建。
+
 ```bash
 npm test             # 单元测试
 npm run check:atlas  # 词库结构与媒体校验

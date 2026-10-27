@@ -82,6 +82,8 @@ npm run dev
 
 Open **http://localhost:5188**.
 
+With Docker Compose, run `docker compose up -d` and open the same URL. Stop the container with `docker compose down`. GitHub Actions publishes the image to GHCR; Compose builds from the Dockerfile if the image is not available locally or in GHCR.
+
 ```bash
 npm test             # Unit tests
 npm run check:atlas  # Dataset and media validation
