@@ -112,7 +112,7 @@ npm run dev
 
 ### Docker Compose
 
-GitHub Actions 会把镜像发布到 GHCR。镜像公开后，在项目根目录运行：
+GitHub Actions 会把镜像发布到 GHCR，并只保留最新 2 个镜像版本。镜像公开后，在项目根目录运行：
 
 ```bash
 docker compose pull

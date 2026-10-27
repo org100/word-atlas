@@ -24,7 +24,7 @@ location ^~ /words/ {
 
 ## Docker Compose
 
-仓库的 `.github/workflows/docker-publish.yml` 会在推送到 `main` 后构建并发布 `ghcr.io/org100/word-atlas:latest`。首次使用前，在 GitHub 仓库的 Packages 页面将该镜像设为 Public，然后在项目根目录运行：
+仓库的 `.github/workflows/docker-publish.yml` 会在推送到 `main` 后构建并发布 `ghcr.io/org100/word-atlas:latest`，并自动清理旧版本，只保留最近 2 个镜像版本。首次使用前，在 GitHub 仓库的 Packages 页面将该镜像设为 Public，然后在项目根目录运行：
 
 ```bash
 docker compose pull

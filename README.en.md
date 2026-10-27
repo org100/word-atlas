@@ -84,7 +84,7 @@ Open **http://localhost:5188**.
 
 ### Docker Compose
 
-GitHub Actions publishes the image to GHCR. Once the image is public, run this from the project root:
+GitHub Actions publishes the image to GHCR and keeps only the two latest image versions. Once the image is public, run this from the project root:
 
 ```bash
 docker compose pull
