@@ -70,6 +70,8 @@
 <details>
 <summary><b>听发音、例句与环境声样本</b></summary>
 
+
+
 拿 *abandon* 举例，点开就能听（在线播放）：
 
 | | |
@@ -92,6 +94,7 @@
 
 全部素材都在仓库里：插画在 `public/atlas/img/`，录音在 `public/atlas/audio/`，这两类按 CC BY 4.0 开放；界面声音和配乐在 `public/sfx/`，随应用一起提供。
 
+
 </details>
 
 ## 本地运行
@@ -99,7 +102,7 @@
 需要 **Node.js 20+** 和 npm。仓库含完整图片与录音，首次下载可能较久。
 
 ```bash
-git clone --depth 1 https://github.com/org100/word-atlas.git
+git clone --depth 1 https://github.com/designfuchen/word-atlas.git
 cd word-atlas
 npm ci
 npm run dev
@@ -109,7 +112,7 @@ npm run dev
 
 ### Docker Compose
 
-可以直接从 Github 获取配置文件并启动：
+直接拉取配置文件并启动容器：
 
 ```bash
 curl -O https://raw.githubusercontent.com/org100/word-atlas/main/docker-compose.yaml
@@ -117,7 +120,8 @@ docker compose pull
 docker compose up -d
 ```
 
-如需配置端口或部署路径，可创建 `.env` 文件写入环境变量：
+打开 `http://localhost:5188`。如需自定义端口或路径，可在同级目录创建 `.env` 文件：
+
 ```env
 ATLAS_PORT=5188
 ATLAS_BASE=/
@@ -125,12 +129,14 @@ ATLAS_BASE=/
 
 ### Nginx Proxy Manager
 
-在同一个 Docker 网络下，NPM 可直接使用容器名进行反向代理：
+如果 NPM 与本项目运行在同一个 Docker 网络（如 `npm_default`），无需填写 IP，直接用容器名转发：
 
-- **Forward Hostname / IP**: `word-atlas`
-- **Forward Port**: `80`
-
-开启 SSL 后即可通过域名访问。完整说明见 [部署文档](docs/deployment.md)。
+1. 在 NPM 中新增 **Proxy Host**：
+   - **Domain Names**: 你的域名（如 `words.example.com`）
+   - **Scheme**: `http`
+   - **Forward Hostname / IP**: `word-atlas`（直接填写容器名）
+   - **Forward Port**: `80`
+2. 在 **SSL** 标签页申请 Let's Encrypt 证书并勾选 **Force SSL**。
 
 ```bash
 npm test             # 单元测试
