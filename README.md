@@ -105,7 +105,7 @@ npm ci
 npm run dev
 ```
 
-打开 **http://localhost:5188**。
+打开 `http://localhost:5188`。
 
 ### Docker Compose
 
